@@ -20,6 +20,7 @@ class OpcionRango(Opcion):
 class EquipoOpcion(BaseModel):
     valor: str
     nombre: str
+    color: str | None
 
 
 class Umbrales(BaseModel):

@@ -63,8 +63,8 @@ Opciones de los selectores, umbrales, definiciones y estado de la tubería.
 ```json
 {
   "equipos": [
-    { "valor": "ARI", "nombre": "Arizona Cardinals (ARI)" },
-    { "valor": "…", "nombre": "…" }
+    { "valor": "ARI", "nombre": "Arizona Cardinals (ARI)", "color": "#97233F" },
+    { "valor": "…", "nombre": "…", "color": "…" }
   ],
   "downs": [
     { "valor": "1", "etiqueta": "1.er down" },

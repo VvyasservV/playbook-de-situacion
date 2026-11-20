@@ -11,9 +11,9 @@ import {
   YAxis,
 } from 'recharts'
 import type { Grafica } from '../api'
+import { ACENTO, BORDE_CLARO, esOscuro } from '../colores'
 import { miles, pct } from '../formato'
 
-const COLOR_EQUIPO = '#38bdf8' // acento (sky-400)
 const COLOR_LIGA = '#64748b' // slate-500
 const COLOR_TEXTO = '#e2e8f0'
 
@@ -25,7 +25,8 @@ interface Fila {
 }
 
 // Intervalo del equipo contra intervalo del resto de la liga, con el hueco entre los dos sombreado.
-export default function GraficaVentaja({ g }: { g: Grafica }) {
+// `color` es el del equipo del hallazgo; si es oscuro, la barra lleva contorno claro.
+export default function GraficaVentaja({ g, color }: { g: Grafica; color: string }) {
   const filas: Fila[] = g.filas
     .filter((f) => f.ic95 !== null && f.tasa !== null)
     .map((f) => ({
@@ -38,7 +39,8 @@ export default function GraficaVentaja({ g }: { g: Grafica }) {
 
   return (
     <figure className="space-y-3">
-      <figcaption className="text-2xl font-semibold">{g.titulo}</figcaption>
+      <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Gráfica de firma</p>
+      <figcaption className="text-2xl font-bold">{g.titulo}</figcaption>
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={filas} layout="vertical" margin={{ top: 10, right: 130, bottom: 30, left: 10 }}>
@@ -55,9 +57,9 @@ export default function GraficaVentaja({ g }: { g: Grafica }) {
               <ReferenceArea
                 x1={g.hueco[0] * 100}
                 x2={g.hueco[1] * 100}
-                fill={COLOR_EQUIPO}
+                fill={ACENTO}
                 fillOpacity={0.15}
-                stroke={COLOR_EQUIPO}
+                stroke={ACENTO}
                 strokeDasharray="4 4"
                 label={{ value: 'Hueco', position: 'insideTop', fill: '#7dd3fc', fontSize: 16 }}
               />
@@ -65,7 +67,12 @@ export default function GraficaVentaja({ g }: { g: Grafica }) {
             {liga && <ReferenceLine x={liga.tasa} stroke={COLOR_LIGA} strokeDasharray="6 4" />}
             <Bar dataKey="rango" barSize={28} isAnimationActive={false}>
               {filas.map((f, i) => (
-                <Cell key={f.etiqueta} fill={i === filas.length - 1 ? COLOR_LIGA : COLOR_EQUIPO} />
+                <Cell
+                  key={f.etiqueta}
+                  fill={i === filas.length - 1 ? COLOR_LIGA : color}
+                  stroke={i < filas.length - 1 && esOscuro(color) ? BORDE_CLARO : undefined}
+                  strokeWidth={2}
+                />
               ))}
               <LabelList dataKey="texto" position="right" fill={COLOR_TEXTO} fontSize={16} />
             </Bar>

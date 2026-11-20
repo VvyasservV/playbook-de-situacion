@@ -6,7 +6,7 @@ export default function Hallazgo({ h, meta }: { h: HallazgoDatos; meta: Meta }) 
   const { fino, agrupado } = meta.revision
   return (
     <section aria-labelledby="titulo-hallazgo" className="space-y-4">
-      <p className="text-base font-semibold uppercase tracking-wider text-sky-400">El hallazgo</p>
+      <p className="text-sm font-bold uppercase tracking-[0.2em] text-sky-400">El hallazgo</p>
       <h1 id="titulo-hallazgo" className="text-3xl font-bold leading-tight md:text-4xl">
         {h.frase}
       </h1>

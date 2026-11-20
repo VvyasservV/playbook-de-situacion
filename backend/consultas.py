@@ -75,7 +75,8 @@ def meta(a: Agregados) -> Meta:
     rev = r["revision"][a.principal]
     cob = r["cobertura"]
     return Meta(
-        equipos=[{"valor": e, "nombre": config.nombre_equipo(e)} for e in a.equipos],
+        equipos=[{"valor": e, "nombre": config.nombre_equipo(e), "color": config.COLORES_EQUIPOS.get(e)}
+                 for e in a.equipos],
         downs=[{"valor": d["valor"], "etiqueta": d["etiqueta"]} for d in config.DOWNS],
         distancias=[{k: d[k] for k in ("valor", "etiqueta", "min", "max")} for d in config.DISTANCIAS],
         grupos_rushers=[{k: g[k] for k in ("valor", "etiqueta", "min", "max")} for g in config.GRUPOS_RUSHERS],

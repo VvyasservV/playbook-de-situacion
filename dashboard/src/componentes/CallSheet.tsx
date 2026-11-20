@@ -6,7 +6,12 @@ import { Cargando, ErrorCarga } from './Estados'
 
 const NIVEL: Record<string, string> = { indicio: 'indicio', solida: 'sólida' }
 
-function Caja({ t }: { t: Tarjeta }) {
+function jugadas(n: number): string {
+  return `${miles(n)} ${n === 1 ? 'jugada' : 'jugadas'}`
+}
+
+// El mínimo de 30 jugadas se aplica por grupo de rushers: la caja muestra la n del grupo principal.
+function Caja({ t, grupo }: { t: Tarjeta; grupo: { valor: string; etiqueta: string } }) {
   const clave = t.comparaciones.find((c) => c.direccion !== null)
   if (t.recomendacion_corta && clave) {
     return (
@@ -25,12 +30,15 @@ function Caja({ t }: { t: Tarjeta }) {
     )
   }
   const insuficiente = t.comparaciones.every((c) => c.evidencia === 'insuficiente')
+  const n = t.comparaciones.find((c) => c.grupo_rushers === grupo.valor)?.equipo.n ?? 0
   return (
     <div className="cs-caja">
       <div className="cs-caja-encabezado">{t.situacion_corta}</div>
       <div className="cs-caja-cuerpo cs-gris">
         <p className="cs-estado">{insuficiente ? 'Muestra insuficiente' : 'Sin diferencia'}</p>
-        <p className="cs-n">n = {miles(t.n)} jugadas</p>
+        <p className="cs-n">
+          n = {jugadas(n)} con {grupo.etiqueta.toLowerCase()}
+        </p>
       </div>
     </div>
   )
@@ -57,7 +65,7 @@ export default function CallSheet({ meta, hallazgo, equipo }: { meta: Meta; hall
       {tarjetas.tipo === 'listo' && (
         <div className="cs-cuadricula" style={{ gridTemplateColumns: `repeat(${meta.distancias.length}, 1fr)` }}>
           {tarjetas.datos.map((t) => (
-            <Caja key={`${t.situacion.down}-${t.situacion.distancia}`} t={t} />
+            <Caja key={`${t.situacion.down}-${t.situacion.distancia}`} t={t} grupo={meta.grupos_rushers[0]} />
           ))}
         </div>
       )}

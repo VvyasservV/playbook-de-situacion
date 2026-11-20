@@ -1,4 +1,5 @@
 import type { Comparacion, Direccion, Meta, Tarjeta } from '../api'
+import { BORDE_CLARO, esOscuro } from '../colores'
 import { pct, tasaConIntervalo } from '../formato'
 import InsigniaEvidencia from './InsigniaEvidencia'
 
@@ -14,9 +15,11 @@ function etiqueta(lista: { valor: string; etiqueta: string }[], valor: string): 
 
 function FilaComparacion({ c, meta }: { c: Comparacion; meta: Meta }) {
   return (
-    <li className="space-y-1 border-t border-slate-800 pt-3">
+    <li className="space-y-1 border-t border-slate-700/70 pt-2">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="font-semibold">{etiqueta(meta.grupos_rushers, c.grupo_rushers)}</span>
+        <span className="text-sm font-bold uppercase tracking-[0.15em] text-slate-300">
+          {etiqueta(meta.grupos_rushers, c.grupo_rushers)}
+        </span>
         <InsigniaEvidencia evidencia={c.evidencia} n={c.equipo.n} />
         {c.direccion && <span className={`text-base font-medium ${DIRECCION[c.direccion].clase}`}>{DIRECCION[c.direccion].texto}</span>}
       </div>
@@ -27,14 +30,19 @@ function FilaComparacion({ c, meta }: { c: Comparacion; meta: Meta }) {
   )
 }
 
-export default function TarjetaSituacion({ t, meta }: { t: Tarjeta; meta: Meta }) {
+export default function TarjetaSituacion({ t, meta, color }: { t: Tarjeta; meta: Meta; color: string }) {
   const clave = t.comparaciones.find((c) => c.direccion !== null) ?? t.comparaciones[0]
   const situacion = `${etiqueta(meta.downs, t.situacion.down)} · ${etiqueta(meta.distancias, t.situacion.distancia)}`
+  // Tarjeta destacada (con recomendación): borde izquierdo con el color del equipo y contorno claro si es oscuro
+  const destacada = t.recomendacion
+    ? { borderLeft: `6px solid ${color}`, boxShadow: esOscuro(color) ? `-2px 0 0 0 ${BORDE_CLARO}` : undefined }
+    : undefined
 
   return (
-    <article className="space-y-4 rounded-xl border border-slate-700 bg-slate-900 p-5">
-      <header className="text-base text-slate-400">
-        {t.equipo_nombre} en ataque · {situacion}
+    <article className="space-y-3 rounded-md border border-slate-700 bg-[#111c30] p-4" style={destacada}>
+      <header className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="text-base font-extrabold uppercase tracking-[0.15em] text-slate-100">{situacion}</span>
+        <span className="text-sm font-bold uppercase tracking-[0.15em] text-slate-400">{t.equipo_nombre} en ataque</span>
       </header>
 
       {t.recomendacion ? (
@@ -48,7 +56,13 @@ export default function TarjetaSituacion({ t, meta }: { t: Tarjeta; meta: Meta }
       {clave && clave.equipo.n > 0 && (
         <p className="flex flex-wrap items-baseline gap-x-3">
           {/* Con muestra insuficiente el número queda en segundo plano: lo principal es el mensaje */}
-          <span className={clave.evidencia === 'insuficiente' ? 'text-lg font-medium text-slate-500' : 'text-4xl font-bold text-sky-300'}>
+          <span
+            className={
+              clave.evidencia === 'insuficiente'
+                ? 'text-lg font-medium text-slate-500'
+                : 'text-5xl font-black tabular-nums text-sky-300'
+            }
+          >
             {pct(clave.equipo.tasa, 0)}
           </span>
           <span className={clave.evidencia === 'insuficiente' ? 'text-base text-slate-500' : 'text-lg text-slate-300'}>

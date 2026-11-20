@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { api } from './api'
 import type { Hallazgo as HallazgoDatos, Meta, Reporte, Tarjeta } from './api'
+import { colorEquipo, contorno, textoSobre } from './colores'
 import { miles } from './formato'
 import { usarDatos } from './usarDatos'
 import { Cargando, ErrorCarga } from './componentes/Estados'
@@ -15,8 +16,8 @@ const SIN_VENTAJA = 'Ninguna situación de este equipo se separa de la liga con 
 
 function Seccion({ titulo, children, clase = '' }: { titulo: string; children: ReactNode; clase?: string }) {
   return (
-    <section className={`space-y-5 border-t border-slate-800 pt-8 ${clase}`}>
-      <h2 className="text-2xl font-bold">{titulo}</h2>
+    <section className={`space-y-5 border-t border-slate-700/70 pt-8 ${clase}`}>
+      <h2 className="text-xl font-extrabold uppercase tracking-[0.15em] text-slate-100">{titulo}</h2>
       {children}
     </section>
   )
@@ -40,7 +41,12 @@ function ReporteEquipo({ reporte, meta }: { reporte: Reporte; meta: Meta }) {
       ) : (
         <div className="grid gap-5 lg:grid-cols-2">
           {reporte.tarjetas.map((t) => (
-            <TarjetaSituacion key={`${t.situacion.down}-${t.situacion.distancia}`} t={t} meta={meta} />
+            <TarjetaSituacion
+              key={`${t.situacion.down}-${t.situacion.distancia}`}
+              t={t}
+              meta={meta}
+              color={colorEquipo(meta, reporte.equipo)}
+            />
           ))}
         </div>
       )}
@@ -56,33 +62,49 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
   const reporte = usarDatos<Reporte>(equipo ? () => api.reporte(equipo) : null, [equipo])
   const tarjeta = usarDatos<Tarjeta>(equipo ? () => api.situacion(equipo, down, distancia) : null, [equipo, down, distancia])
   const cob = meta.cobertura
+  const color = colorEquipo(meta, equipo)
 
   return (
     <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-base text-slate-400">
-          Playbook de Situación · preparación del plan de presión contra el ataque rival
-        </p>
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="rounded-lg border-2 border-sky-400 px-5 py-2 text-lg font-bold text-sky-300 hover:bg-sky-400 hover:text-slate-950"
-        >
-          Imprimir call sheet
-        </button>
+      {/* Barra tipo marcador */}
+      <header className="grid grid-cols-1 items-center gap-4 rounded-lg border border-slate-700 bg-[#0f1a2e] px-5 py-3 md:grid-cols-3">
+        <p className="text-base font-extrabold uppercase tracking-[0.2em] text-slate-100">Playbook de situación</p>
+        <div className="flex items-center gap-3 md:justify-center">
+          <span
+            className="min-w-[4.5rem] rounded-md px-3 py-1 text-center text-2xl font-black tracking-wider tabular-nums"
+            style={{ background: color, color: textoSobre(color), border: `2px solid ${contorno(color)}` }}
+          >
+            {equipo}
+          </span>
+          <span className="text-sm font-bold uppercase tracking-[0.2em] text-slate-300">Ataque rival</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-4 md:justify-end">
+          <span className="text-sm font-bold uppercase tracking-[0.2em] text-slate-300">
+            {cob.temporadas.join(', ')} · Semanas {cob.semana_min}-{cob.semana_max}
+          </span>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="rounded-md border-2 border-sky-400 px-4 py-2 text-base font-bold uppercase tracking-wider text-sky-300 hover:bg-sky-400 hover:text-slate-950"
+          >
+            Imprimir call sheet
+          </button>
+        </div>
       </header>
 
       <Hallazgo h={hallazgo} meta={meta} />
 
-      {hallazgo.grafica && <GraficaVentaja g={hallazgo.grafica} />}
+      {hallazgo.grafica && (
+        <GraficaVentaja g={hallazgo.grafica} color={colorEquipo(meta, hallazgo.situacion?.equipo)} />
+      )}
 
       <Seccion titulo="Situaciones con ventaja clara del equipo">
-        <label className="flex flex-wrap items-center gap-3 text-lg">
-          <span className="text-slate-300">Ataque rival</span>
+        <label className="flex flex-wrap items-center gap-3">
+          <span className="text-sm font-bold uppercase tracking-[0.2em] text-slate-300">Ataque rival</span>
           <select
             value={equipo}
             onChange={(e) => setEquipo(e.target.value)}
-            className="rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-lg text-slate-100"
+            className="rounded-md border border-slate-600 bg-[#0f1a2e] px-4 py-2 text-lg font-semibold text-slate-100"
           >
             {meta.equipos.map((e) => (
               <option key={e.valor} value={e.valor}>
@@ -107,7 +129,7 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
         />
         {tarjeta.tipo === 'cargando' && <Cargando texto="Cargando la situación…" />}
         {tarjeta.tipo === 'error' && <ErrorCarga mensaje={tarjeta.mensaje} />}
-        {tarjeta.tipo === 'listo' && <TarjetaSituacion t={tarjeta.datos} meta={meta} />}
+        {tarjeta.tipo === 'listo' && <TarjetaSituacion t={tarjeta.datos} meta={meta} color={color} />}
       </Seccion>
 
       {/* Vista previa de la hoja impresa. Al imprimir, es lo único que queda (imprimir.css) */}
@@ -115,7 +137,7 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
         <CallSheet meta={meta} hallazgo={hallazgo} equipo={equipo} />
       </Seccion>
 
-      <footer className="space-y-1 border-t border-slate-800 pt-6 text-base text-slate-400">
+      <footer className="space-y-1 border-t border-slate-700/70 pt-6 text-base text-slate-400">
         <p>
           Datos: temporada {cob.temporadas.join(', ')}, semanas {cob.semana_min} a {cob.semana_max}, {miles(cob.partidos)}{' '}
           partidos, {miles(cob.jugadas)} jugadas de pase.

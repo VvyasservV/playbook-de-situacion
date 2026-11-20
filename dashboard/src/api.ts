@@ -17,6 +17,7 @@ export interface OpcionRango extends Opcion {
 export interface EquipoOpcion {
   valor: string
   nombre: string
+  color: string | null
 }
 
 export interface Conteo {
