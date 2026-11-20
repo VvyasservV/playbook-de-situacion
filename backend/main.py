@@ -1,4 +1,4 @@
-"""API del Playbook de Situación. Ejecuta: .venv\\Scripts\\uvicorn backend.main:app --reload"""
+"""API del Playbook de Situación. Ejecuta: .venv\\Scripts\\python -m uvicorn backend.main:app --reload"""
 from fastapi import FastAPI, HTTPException, Query
 
 from backend import config, consultas
