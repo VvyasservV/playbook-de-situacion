@@ -5,6 +5,7 @@ import type { Hallazgo as HallazgoDatos, Meta, Reporte, Tarjeta } from './api'
 import { miles } from './formato'
 import { usarDatos } from './usarDatos'
 import { Cargando, ErrorCarga } from './componentes/Estados'
+import CallSheet from './componentes/CallSheet'
 import GraficaVentaja from './componentes/GraficaVentaja'
 import Hallazgo from './componentes/Hallazgo'
 import SelectorSituacion from './componentes/SelectorSituacion'
@@ -12,9 +13,9 @@ import TarjetaSituacion from './componentes/TarjetaSituacion'
 
 const SIN_VENTAJA = 'Ninguna situación de este equipo se separa de la liga con evidencia suficiente'
 
-function Seccion({ titulo, children }: { titulo: string; children: ReactNode }) {
+function Seccion({ titulo, children, clase = '' }: { titulo: string; children: ReactNode; clase?: string }) {
   return (
-    <section className="space-y-5 border-t border-slate-800 pt-8">
+    <section className={`space-y-5 border-t border-slate-800 pt-8 ${clase}`}>
       <h2 className="text-2xl font-bold">{titulo}</h2>
       {children}
     </section>
@@ -55,7 +56,6 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
   const reporte = usarDatos<Reporte>(equipo ? () => api.reporte(equipo) : null, [equipo])
   const tarjeta = usarDatos<Tarjeta>(equipo ? () => api.situacion(equipo, down, distancia) : null, [equipo, down, distancia])
   const cob = meta.cobertura
-  const nombreEquipo = meta.equipos.find((e) => e.valor === equipo)?.nombre ?? equipo
 
   return (
     <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
@@ -66,26 +66,18 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
         <button
           type="button"
           onClick={() => window.print()}
-          className="no-imprimir rounded-lg border-2 border-sky-400 px-5 py-2 text-lg font-bold text-sky-300 hover:bg-sky-400 hover:text-slate-950"
+          className="rounded-lg border-2 border-sky-400 px-5 py-2 text-lg font-bold text-sky-300 hover:bg-sky-400 hover:text-slate-950"
         >
           Imprimir call sheet
         </button>
       </header>
 
-      <p className="solo-imprimir titulo-call-sheet">
-        Call sheet de presión · Ataque rival: {nombreEquipo}
-      </p>
-
       <Hallazgo h={hallazgo} meta={meta} />
 
-      {hallazgo.grafica && (
-        <div className="no-imprimir">
-          <GraficaVentaja g={hallazgo.grafica} />
-        </div>
-      )}
+      {hallazgo.grafica && <GraficaVentaja g={hallazgo.grafica} />}
 
       <Seccion titulo="Situaciones con ventaja clara del equipo">
-        <label className="no-imprimir flex flex-wrap items-center gap-3 text-lg">
+        <label className="flex flex-wrap items-center gap-3 text-lg">
           <span className="text-slate-300">Ataque rival</span>
           <select
             value={equipo}
@@ -105,19 +97,22 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
       </Seccion>
 
       <Seccion titulo="Consultar una situación">
-        <div className="no-imprimir">
-          <SelectorSituacion
-            downs={meta.downs}
-            distancias={meta.distancias}
-            down={down}
-            distancia={distancia}
-            alCambiarDown={setDown}
-            alCambiarDistancia={setDistancia}
-          />
-        </div>
+        <SelectorSituacion
+          downs={meta.downs}
+          distancias={meta.distancias}
+          down={down}
+          distancia={distancia}
+          alCambiarDown={setDown}
+          alCambiarDistancia={setDistancia}
+        />
         {tarjeta.tipo === 'cargando' && <Cargando texto="Cargando la situación…" />}
         {tarjeta.tipo === 'error' && <ErrorCarga mensaje={tarjeta.mensaje} />}
         {tarjeta.tipo === 'listo' && <TarjetaSituacion t={tarjeta.datos} meta={meta} />}
+      </Seccion>
+
+      {/* Vista previa de la hoja impresa. Al imprimir, es lo único que queda (imprimir.css) */}
+      <Seccion titulo="Call sheet" clase="contenedor-call-sheet">
+        <CallSheet meta={meta} hallazgo={hallazgo} equipo={equipo} />
       </Seccion>
 
       <footer className="space-y-1 border-t border-slate-800 pt-6 text-base text-slate-400">

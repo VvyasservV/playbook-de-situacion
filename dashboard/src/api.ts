@@ -60,12 +60,14 @@ export interface Comparacion {
 
 export interface Tarjeta {
   situacion: { equipo: string; down: string; distancia: string }
+  situacion_corta: string
   equipo_nombre: string
   juego_neutral: boolean
   n: number
   tendencia: { etiqueta: string; equipo: Tasa; resto_liga: Tasa }
   comparaciones: Comparacion[]
   recomendacion: string | null
+  recomendacion_corta: string | null
   mensaje: string | null
 }
 

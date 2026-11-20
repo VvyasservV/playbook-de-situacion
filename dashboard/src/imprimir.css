@@ -1,110 +1,182 @@
-/* Call sheet: la misma vista, impresa en papel. Solo CSS. */
+/* Call sheet: hoja de presión estilo coordinador. La misma hoja se ve como vista previa en pantalla
+   y es lo único que se imprime. Solo CSS. El texto dice todo; el color solo ayuda. */
 
-.solo-imprimir {
-  display: none;
+.call-sheet {
+  background: #fff;
+  color: #000;
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 16px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.cs-franja {
+  background: #0f172a;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 4px;
+}
+
+.cs-titulo {
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cs-linea {
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-cuadricula {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cs-caja {
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  overflow: hidden;
+  break-inside: avoid;
+}
+
+.cs-caja-encabezado {
+  background: #e5e7eb;
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  font-size: 16px;
+}
+
+.cs-caja-cuerpo {
+  padding: 8px 10px;
+}
+
+.cs-caja-recomienda {
+  border: 3px solid #000;
+}
+
+.cs-caja-recomienda .cs-caja-encabezado {
+  background: #38bdf8;
+}
+
+.cs-orden {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.cs-cifra {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cs-n {
+  font-size: 16px;
+}
+
+.cs-gris,
+.cs-gris .cs-n {
+  color: #6b7280;
+}
+
+.cs-estado {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cs-pie {
+  margin-top: 10px;
+  color: #374151;
+  font-size: 16px;
 }
 
 @media print {
   @page {
-    size: letter;
-    margin: 12mm;
+    size: letter landscape;
+    margin: 10mm;
   }
 
-  .no-imprimir {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* Solo se imprime la call sheet */
+  main > :not(.contenedor-call-sheet),
+  .contenedor-call-sheet > :not(.call-sheet) {
     display: none !important;
-  }
-
-  .solo-imprimir {
-    display: block;
-  }
-
-  /* Papel blanco y tinta negra: se ignoran los colores del tema oscuro */
-  *,
-  *::before,
-  *::after {
-    color: #000 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    border-color: #555 !important;
-  }
-
-  html {
-    font-size: 11pt;
   }
 
   main {
     max-width: none !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 
-  main > * + * {
-    margin-top: 10pt !important;
+  .contenedor-call-sheet {
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  .titulo-call-sheet {
-    font-size: 14pt;
-    font-weight: 700;
-    border-bottom: 2px solid #000;
-    padding-bottom: 4pt;
+  .call-sheet {
+    padding: 0;
+    border-radius: 0;
+    font-size: 10pt;
   }
 
-  h1 {
-    font-size: 15pt !important;
-    line-height: 1.25 !important;
+  .cs-franja {
+    padding: 4mm 5mm;
   }
 
-  h2 {
-    font-size: 13pt !important;
+  .cs-titulo {
+    font-size: 15pt;
   }
 
-  section {
-    padding-top: 6pt !important;
+  .cs-linea {
+    font-size: 10.5pt;
   }
 
-  section > * + * {
-    margin-top: 6pt !important;
+  .cs-cuadricula {
+    gap: 3mm;
+    margin-top: 4mm;
   }
 
-  p,
-  li,
-  span {
-    font-size: 10pt !important;
+  .cs-caja {
+    height: 40mm;
   }
 
-  /* Tarjetas compactas, en dos columnas, sin partirse entre hojas */
-  .grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8pt !important;
+  .cs-caja-encabezado {
+    font-size: 11pt;
+    padding: 1.5mm 3mm;
   }
 
-  .tarjeta {
-    break-inside: avoid;
-    padding: 8pt !important;
-    border: 1.5px solid #000 !important;
-    border-radius: 4pt !important;
+  .cs-caja-cuerpo {
+    padding: 2.5mm 3mm;
   }
 
-  .tarjeta > * + * {
-    margin-top: 4pt !important;
+  .cs-orden {
+    font-size: 17pt;
   }
 
-  /* Lo que se lee en 3 segundos: la recomendación (o el mensaje) y el número clave */
-  .tarjeta > p:first-of-type,
-  .mensaje-tarjeta {
-    font-size: 12pt !important;
-    font-weight: 700 !important;
+  .cs-cifra {
+    font-size: 13pt;
   }
 
-  .numero-clave span:first-child {
-    font-size: 16pt !important;
+  .cs-n,
+  .cs-estado {
+    font-size: 11pt;
   }
 
-  .tendencia-tarjeta {
-    display: none;
-  }
-
-  footer p {
-    font-size: 8pt !important;
+  .cs-pie {
+    margin-top: 3mm;
+    font-size: 8pt;
   }
 }

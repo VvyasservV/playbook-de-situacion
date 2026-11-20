@@ -99,13 +99,16 @@ def tarjeta(a: Agregados, equipo: str, down: str, distancia: str) -> Tarjeta:
         mejor = max(con_ventaja, key=lambda c: c["ventaja"])
         texto = recomendacion.recomendacion_tarjeta(nombre, mejor["grupo_rushers"], _direccion(mejor), mejor["tasa"],
                                                     mejor["tasa_resto"], mejor["evidencia"], int(mejor["n"]))
+        corta = recomendacion.recomendacion_corta(mejor["grupo_rushers"], _direccion(mejor))
         mensaje = None
     else:
-        texto = None
+        texto = corta = None
         mensaje = recomendacion.mensaje_sin_recomendacion([c["evidencia"] for c in celdas])
 
     return Tarjeta(
         situacion=SituacionTarjeta(equipo=equipo, down=down, distancia=distancia),
+        situacion_corta=recomendacion.situacion_corta(down, distancia),
+        recomendacion_corta=corta,
         equipo_nombre=nombre,
         juego_neutral=a.neutral,
         n=int(blitz["n"]),

@@ -159,6 +159,7 @@ un down y una distancia, con una comparación por grupo de rushers.
 ```json
 {
   "situacion": { "equipo": "CAR", "down": "2", "distancia": "larga" },
+  "situacion_corta": "2.º y largo",
   "equipo_nombre": "Carolina Panthers (CAR)",
   "juego_neutral": true,
   "n": 52,
@@ -188,9 +189,12 @@ un down y una distancia, con una comparación por grupo de rushers.
     }
   ],
   "recomendacion": "Presiona con 4: con 4 rushers o menos Carolina Panthers (CAR) permite presión en 59% de estos pases, contra 30% del resto de la liga (indicio, n = 39).",
+  "recomendacion_corta": "Presiona con 4",
   "mensaje": null
 }
 ```
+
+- `recomendacion_corta`: la orden de la call sheet impresa; `null` cuando no hay recomendación.
 
 - `n` = jugadas del equipo en esa situación (los dos grupos de rushers).
 - Si el equipo no tiene jugadas en esa situación, `equipo` trae `n: 0`, `tasa: null` e

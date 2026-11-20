@@ -65,6 +65,11 @@ def decision(grupo: str, direccion: str) -> str:
     return "Evita el blitz: este ataque lo contiene mejor que el resto de la liga."
 
 
+def recomendacion_corta(grupo: str, direccion: str) -> str:
+    """'Presiona con 4': la orden de la call sheet."""
+    return _prefijo(grupo, direccion)
+
+
 def _prefijo(grupo: str, direccion: str) -> str:
     if grupo == "4_o_menos":
         return "Presiona con 4" if direccion == "mas_presion" else "Con 4 no llegas"

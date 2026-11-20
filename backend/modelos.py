@@ -100,12 +100,14 @@ class SituacionTarjeta(BaseModel):
 
 class Tarjeta(BaseModel):
     situacion: SituacionTarjeta
+    situacion_corta: str
     equipo_nombre: str
     juego_neutral: bool
     n: int
     tendencia: Tendencia
     comparaciones: list[Comparacion]
     recomendacion: str | None
+    recomendacion_corta: str | None
     mensaje: str | None
 
 
