@@ -14,3 +14,9 @@ __pycache__/
 *.pem
 *.key
 .aws/
+
+# Archivos locales que no van al repositorio
+setup-log.txt
+tmp/
+.pytest_cache/
+.hackathon/ENTREGA.md

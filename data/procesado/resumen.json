@@ -1,0 +1,92 @@
+{
+  "generado": "2026-11-20T10:53:42",
+  "cobertura": {
+    "temporadas": [
+      2021
+    ],
+    "semana_min": 1,
+    "semana_max": 8,
+    "partidos": 122,
+    "equipos": [
+      "ARI",
+      "ATL",
+      "BAL",
+      "BUF",
+      "CAR",
+      "CHI",
+      "CIN",
+      "CLE",
+      "DAL",
+      "DEN",
+      "DET",
+      "GB",
+      "HOU",
+      "IND",
+      "JAX",
+      "KC",
+      "LA",
+      "LAC",
+      "LV",
+      "MIA",
+      "MIN",
+      "NE",
+      "NO",
+      "NYG",
+      "NYJ",
+      "PHI",
+      "PIT",
+      "SEA",
+      "SF",
+      "TB",
+      "TEN",
+      "WAS"
+    ],
+    "jugadas": 8522,
+    "jugadas_neutral": 4334
+  },
+  "juego_neutral": {
+    "aplicado": true,
+    "cuartos": [
+      1,
+      2,
+      3
+    ],
+    "diferencia_maxima": 8
+  },
+  "muestra_principal": "neutral",
+  "revision": {
+    "completa": {
+      "agrupado": {
+        "revisadas": 109,
+        "con_ventaja": 7
+      },
+      "fino": {
+        "revisadas": 86,
+        "con_ventaja": 5
+      }
+    },
+    "neutral": {
+      "agrupado": {
+        "revisadas": 65,
+        "con_ventaja": 3
+      },
+      "fino": {
+        "revisadas": 30,
+        "con_ventaja": 2
+      }
+    }
+  },
+  "hallazgo": {
+    "equipo": "CAR",
+    "down": "2",
+    "distancia": "larga",
+    "grupo_rushers": "4_o_menos"
+  },
+  "filas_leidas": 8557,
+  "descartes": {
+    "sin partido en games": 0,
+    "sin datos de PFF": 0,
+    "down fuera de 1-4 (conversiones de 2 puntos)": 35,
+    "yardas por avanzar menores a 1": 0
+  }
+}
