@@ -1,7 +1,6 @@
-import { api } from '../api'
 import type { Hallazgo, Meta, Tarjeta } from '../api'
 import { miles, pct } from '../formato'
-import { usarDatos } from '../usarDatos'
+import type { Estado } from '../usarDatos'
 import { Cargando, ErrorCarga } from './Estados'
 
 const NIVEL: Record<string, string> = { indicio: 'indicio', solida: 'sólida' }
@@ -44,20 +43,29 @@ function Caja({ t, grupo }: { t: Tarjeta; grupo: { valor: string; etiqueta: stri
   )
 }
 
-// La hoja que se imprime: 3 downs x 3 distancias del equipo elegido (9 llamadas a api/situacion).
-export default function CallSheet({ meta, hallazgo, equipo }: { meta: Meta; hallazgo: Hallazgo; equipo: string }) {
-  const tarjetas = usarDatos<Tarjeta[]>(
-    () => Promise.all(meta.downs.flatMap((d) => meta.distancias.map((x) => api.situacion(equipo, d.valor, x.valor)))),
-    [equipo],
-  )
+// La hoja que se imprime: 3 downs x 3 distancias del equipo elegido (las 9 situaciones las pide App).
+export default function CallSheet({ meta, hallazgo, equipo, tarjetas }: {
+  meta: Meta
+  hallazgo: Hallazgo
+  equipo: string
+  tarjetas: Estado<Tarjeta[]>
+}) {
   const nombre = meta.equipos.find((e) => e.valor === equipo)?.nombre ?? equipo
 
   return (
     <div className="call-sheet">
       <header className="cs-franja">
         <p className="cs-titulo">Call sheet de presión · Ataque rival: {nombre}</p>
-        <p className="cs-linea">{hallazgo.frase}</p>
-        {hallazgo.decision && <p className="cs-linea">Decisión: {hallazgo.decision}</p>}
+        {hallazgo.situacion?.equipo === equipo ? (
+          <>
+            <p className="cs-linea">{hallazgo.frase}</p>
+            {hallazgo.decision && <p className="cs-linea">Decisión: {hallazgo.decision}</p>}
+          </>
+        ) : (
+          <p className="cs-linea">
+            Sin situaciones con ventaja clara para este equipo: las cajas son solo de referencia.
+          </p>
+        )}
       </header>
 
       {tarjetas.tipo === 'cargando' && <Cargando texto="Cargando la call sheet…" />}

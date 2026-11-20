@@ -30,13 +30,16 @@ function FilaComparacion({ c, meta }: { c: Comparacion; meta: Meta }) {
   )
 }
 
-export default function TarjetaSituacion({ t, meta, color }: { t: Tarjeta; meta: Meta; color: string }) {
+// `color` null = tarjeta exploratoria: sin color de equipo y con el número en gris.
+export default function TarjetaSituacion({ t, meta, color }: { t: Tarjeta; meta: Meta; color: string | null }) {
   const clave = t.comparaciones.find((c) => c.direccion !== null) ?? t.comparaciones[0]
   const situacion = `${etiqueta(meta.downs, t.situacion.down)} · ${etiqueta(meta.distancias, t.situacion.distancia)}`
   // Tarjeta destacada (con recomendación): borde izquierdo con el color del equipo y contorno claro si es oscuro
-  const destacada = t.recomendacion
+  const destacada = t.recomendacion && color
     ? { borderLeft: `6px solid ${color}`, boxShadow: esOscuro(color) ? `-2px 0 0 0 ${BORDE_CLARO}` : undefined }
     : undefined
+  // Sin color (tarjeta exploratoria) o con muestra insuficiente, el número queda en gris y pequeño
+  const gris = color === null || clave?.evidencia === 'insuficiente'
 
   return (
     <article className="space-y-3 rounded-md border border-slate-700 bg-[#111c30] p-4" style={destacada}>
@@ -55,17 +58,11 @@ export default function TarjetaSituacion({ t, meta, color }: { t: Tarjeta; meta:
 
       {clave && clave.equipo.n > 0 && (
         <p className="flex flex-wrap items-baseline gap-x-3">
-          {/* Con muestra insuficiente el número queda en segundo plano: lo principal es el mensaje */}
-          <span
-            className={
-              clave.evidencia === 'insuficiente'
-                ? 'text-lg font-medium text-slate-500'
-                : 'text-5xl font-black tabular-nums text-sky-300'
-            }
-          >
+          {/* Con el número en gris, lo principal es el mensaje */}
+          <span className={gris ? 'text-lg font-medium text-slate-500' : 'text-5xl font-black tabular-nums text-sky-300'}>
             {pct(clave.equipo.tasa, 0)}
           </span>
-          <span className={clave.evidencia === 'insuficiente' ? 'text-base text-slate-500' : 'text-lg text-slate-300'}>
+          <span className={gris ? 'text-base text-slate-500' : 'text-lg text-slate-300'}>
             presión permitida con {etiqueta(meta.grupos_rushers, clave.grupo_rushers).toLowerCase()}, contra{' '}
             {pct(clave.resto_liga.tasa, 0)} del resto de la liga
           </span>

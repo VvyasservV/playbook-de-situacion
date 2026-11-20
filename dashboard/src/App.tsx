@@ -5,14 +5,14 @@ import type { Hallazgo as HallazgoDatos, Meta, Reporte, Tarjeta } from './api'
 import { colorEquipo, contorno, textoSobre } from './colores'
 import { miles } from './formato'
 import { usarDatos } from './usarDatos'
+import type { Estado } from './usarDatos'
 import { Cargando, ErrorCarga } from './componentes/Estados'
 import CallSheet from './componentes/CallSheet'
+import Exploratorio from './componentes/Exploratorio'
 import GraficaVentaja from './componentes/GraficaVentaja'
 import Hallazgo from './componentes/Hallazgo'
 import SelectorSituacion from './componentes/SelectorSituacion'
 import TarjetaSituacion from './componentes/TarjetaSituacion'
-
-const SIN_VENTAJA = 'Ninguna situación de este equipo se separa de la liga con evidencia suficiente'
 
 function Seccion({ titulo, children, clase = '' }: { titulo: string; children: ReactNode; clase?: string }) {
   return (
@@ -23,33 +23,32 @@ function Seccion({ titulo, children, clase = '' }: { titulo: string; children: R
   )
 }
 
-function ReporteEquipo({ reporte, meta }: { reporte: Reporte; meta: Meta }) {
+function ReporteEquipo({ reporte, meta, situaciones }: {
+  reporte: Reporte
+  meta: Meta
+  situaciones: Estado<Tarjeta[]>
+}) {
+  if (reporte.tarjetas.length === 0) {
+    return <Exploratorio reporte={reporte} meta={meta} situaciones={situaciones} />
+  }
   const { revisadas, con_ventaja } = reporte.revision_equipo
   return (
     <div className="space-y-4">
       <p className="text-lg text-slate-300">
-        {revisadas === 0
-          ? `${reporte.equipo_nombre} no tiene situaciones con ${meta.umbrales.n_minimo} jugadas o más.`
-          : `${con_ventaja} de ${revisadas} situaciones revisadas de ${reporte.equipo_nombre} tienen ventaja clara.`}{' '}
-        En toda la liga: {reporte.revision_liga.con_ventaja} de {reporte.revision_liga.revisadas}.{' '}
+        {con_ventaja} de {revisadas} situaciones revisadas de {reporte.equipo_nombre} tienen ventaja clara. En toda la
+        liga: {reporte.revision_liga.con_ventaja} de {reporte.revision_liga.revisadas}.{' '}
         <span className="text-slate-400">{meta.definiciones.ventaja_clara}</span>
       </p>
-      {reporte.tarjetas.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-600 p-5 text-xl font-semibold text-slate-300">
-          {SIN_VENTAJA}
-        </p>
-      ) : (
-        <div className="grid gap-5 lg:grid-cols-2">
-          {reporte.tarjetas.map((t) => (
-            <TarjetaSituacion
-              key={`${t.situacion.down}-${t.situacion.distancia}`}
-              t={t}
-              meta={meta}
-              color={colorEquipo(meta, reporte.equipo)}
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-5 lg:grid-cols-2">
+        {reporte.tarjetas.map((t) => (
+          <TarjetaSituacion
+            key={`${t.situacion.down}-${t.situacion.distancia}`}
+            t={t}
+            meta={meta}
+            color={colorEquipo(meta, reporte.equipo)}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -61,6 +60,13 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
 
   const reporte = usarDatos<Reporte>(equipo ? () => api.reporte(equipo) : null, [equipo])
   const tarjeta = usarDatos<Tarjeta>(equipo ? () => api.situacion(equipo, down, distancia) : null, [equipo, down, distancia])
+  // Las 9 situaciones del equipo (3 downs x 3 distancias): las usan la call sheet y la vista exploratoria
+  const situaciones = usarDatos<Tarjeta[]>(
+    equipo
+      ? () => Promise.all(meta.downs.flatMap((d) => meta.distancias.map((x) => api.situacion(equipo, d.valor, x.valor))))
+      : null,
+    [equipo],
+  )
   const cob = meta.cobertura
   const color = colorEquipo(meta, equipo)
 
@@ -115,7 +121,7 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
         </label>
         {reporte.tipo === 'cargando' && <Cargando texto="Cargando situaciones del equipo…" />}
         {reporte.tipo === 'error' && <ErrorCarga mensaje={reporte.mensaje} />}
-        {reporte.tipo === 'listo' && <ReporteEquipo reporte={reporte.datos} meta={meta} />}
+        {reporte.tipo === 'listo' && <ReporteEquipo reporte={reporte.datos} meta={meta} situaciones={situaciones} />}
       </Seccion>
 
       <Seccion titulo="Consultar una situación">
@@ -134,7 +140,7 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
 
       {/* Vista previa de la hoja impresa. Al imprimir, es lo único que queda (imprimir.css) */}
       <Seccion titulo="Call sheet" clase="contenedor-call-sheet">
-        <CallSheet meta={meta} hallazgo={hallazgo} equipo={equipo} />
+        <CallSheet meta={meta} hallazgo={hallazgo} equipo={equipo} tarjetas={situaciones} />
       </Seccion>
 
       <footer className="space-y-1 border-t border-slate-700/70 pt-6 text-base text-slate-400">

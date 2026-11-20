@@ -16,14 +16,14 @@ intervalos de confianza ni siquiera se cruzan.
 Para evitar sesgos por equipos obligados a lanzar por ir abajo en el marcador, filtré el
 análisis a juego neutral (cuartos 1 a 3, con una diferencia máxima de 8 puntos). Además, al
 abrir la muestra a todo el partido y a cualquier marcador, el patrón se sostiene casi idéntico:
-**59.4% contra 31.9%** en 64 jugadas.
+**59.4% contra 31.9%** (64 jugadas de Carolina contra 1,525 del resto de la liga).
 
 ## Qué cambia en el plan de juego
 
 Contra Carolina en 2.º y largo no tiene sentido arriesgar un blitz. Mandando solo a 4 jugadores
 ya consigues incomodar al quarterback en más de la mitad de los intentos, y te quedan 7
 defensivos atrás en cobertura. Para dimensionarlo: ese nivel de presión es comparable al 41.3%
-que permite el resto de la liga cuando sí le mandan blitz.
+que permite el resto de la liga cuando sí le mandan blitz (184 jugadas).
 
 ## La evidencia
 
@@ -70,7 +70,8 @@ de pase (el archivo solo incluye pases; descarté 35 conversiones de 2 puntos).
 ## Limitaciones
 
 * **Es un patrón situacional, no general:** con 4 rushers en cualquier contexto Carolina está en
-  línea con la liga (39.5% contra 32.7%), y en 3.er down tampoco se separa.
+  línea con la liga (39.5% contra 32.7%; 114 jugadas contra 3,113), y en 3.º y 4.º down tampoco
+  se separa (38.2% contra 42.1%; 34 jugadas).
 * **Factor quarterback:** Sam Darnold jugó 276 de las 294 jugadas de Carolina en esta muestra,
   por lo que parte de las presiones puede deberse a cuánto tiempo aguanta el balón en la bolsa y
   no solo a su línea ofensiva.
