@@ -55,19 +55,37 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
   const reporte = usarDatos<Reporte>(equipo ? () => api.reporte(equipo) : null, [equipo])
   const tarjeta = usarDatos<Tarjeta>(equipo ? () => api.situacion(equipo, down, distancia) : null, [equipo, down, distancia])
   const cob = meta.cobertura
+  const nombreEquipo = meta.equipos.find((e) => e.valor === equipo)?.nombre ?? equipo
 
   return (
     <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
-      <header className="text-base text-slate-400">
-        Playbook de Situación · preparación del plan de presión contra el ataque rival
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-base text-slate-400">
+          Playbook de Situación · preparación del plan de presión contra el ataque rival
+        </p>
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="no-imprimir rounded-lg border-2 border-sky-400 px-5 py-2 text-lg font-bold text-sky-300 hover:bg-sky-400 hover:text-slate-950"
+        >
+          Imprimir call sheet
+        </button>
       </header>
+
+      <p className="solo-imprimir titulo-call-sheet">
+        Call sheet de presión · Ataque rival: {nombreEquipo}
+      </p>
 
       <Hallazgo h={hallazgo} meta={meta} />
 
-      {hallazgo.grafica && <GraficaVentaja g={hallazgo.grafica} />}
+      {hallazgo.grafica && (
+        <div className="no-imprimir">
+          <GraficaVentaja g={hallazgo.grafica} />
+        </div>
+      )}
 
       <Seccion titulo="Situaciones con ventaja clara del equipo">
-        <label className="flex flex-wrap items-center gap-3 text-lg">
+        <label className="no-imprimir flex flex-wrap items-center gap-3 text-lg">
           <span className="text-slate-300">Ataque rival</span>
           <select
             value={equipo}
@@ -87,14 +105,16 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
       </Seccion>
 
       <Seccion titulo="Consultar una situación">
-        <SelectorSituacion
-          downs={meta.downs}
-          distancias={meta.distancias}
-          down={down}
-          distancia={distancia}
-          alCambiarDown={setDown}
-          alCambiarDistancia={setDistancia}
-        />
+        <div className="no-imprimir">
+          <SelectorSituacion
+            downs={meta.downs}
+            distancias={meta.distancias}
+            down={down}
+            distancia={distancia}
+            alCambiarDown={setDown}
+            alCambiarDistancia={setDistancia}
+          />
+        </div>
         {tarjeta.tipo === 'cargando' && <Cargando texto="Cargando la situación…" />}
         {tarjeta.tipo === 'error' && <ErrorCarga mensaje={tarjeta.mensaje} />}
         {tarjeta.tipo === 'listo' && <TarjetaSituacion t={tarjeta.datos} meta={meta} />}
@@ -103,10 +123,12 @@ function Vista({ meta, hallazgo }: { meta: Meta; hallazgo: HallazgoDatos }) {
       <footer className="space-y-1 border-t border-slate-800 pt-6 text-base text-slate-400">
         <p>
           Datos: temporada {cob.temporadas.join(', ')}, semanas {cob.semana_min} a {cob.semana_max}, {miles(cob.partidos)}{' '}
-          partidos, {miles(cob.jugadas)} jugadas de pase. Presión: {meta.definiciones.presion.toLowerCase()} Blitz:{' '}
-          {meta.definiciones.blitz.toLowerCase()}
+          partidos, {miles(cob.jugadas)} jugadas de pase.
         </p>
-        <p>Referencia: {meta.definiciones.referencia.toLowerCase()} Intervalos de Wilson al 95%.</p>
+        {/* Las definiciones se muestran tal cual llegan de la API, sin cambiar mayúsculas (QB, PFF) */}
+        <p>Presión: {meta.definiciones.presion}</p>
+        <p>Blitz: {meta.definiciones.blitz}</p>
+        <p>Referencia: {meta.definiciones.referencia} Intervalos de Wilson al 95%.</p>
       </footer>
     </main>
   )

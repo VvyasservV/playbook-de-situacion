@@ -59,7 +59,7 @@ export default function GraficaVentaja({ g }: { g: Grafica }) {
                 fillOpacity={0.15}
                 stroke={COLOR_EQUIPO}
                 strokeDasharray="4 4"
-                label={{ value: 'Hueco', position: 'insideTop', fill: '#7dd3fc', fontSize: 14 }}
+                label={{ value: 'Hueco', position: 'insideTop', fill: '#7dd3fc', fontSize: 16 }}
               />
             )}
             {liga && <ReferenceLine x={liga.tasa} stroke={COLOR_LIGA} strokeDasharray="6 4" />}

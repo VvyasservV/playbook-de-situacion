@@ -27,8 +27,10 @@ function GrupoBotones({ titulo, opciones, valor, alCambiar }: {
               type="button"
               aria-pressed={activo}
               onClick={() => alCambiar(o.valor)}
-              className={`rounded-lg border px-5 py-3 text-lg font-semibold transition-colors ${
-                activo ? 'border-sky-400 bg-sky-400 text-slate-950' : 'border-slate-600 text-slate-200 hover:border-sky-400'
+              className={`rounded-lg border-2 px-5 py-3 text-lg transition-colors ${
+                activo
+                  ? 'border-sky-300 bg-sky-400 font-bold text-slate-950 shadow-lg shadow-sky-500/30'
+                  : 'border-slate-600 bg-slate-800 font-normal text-slate-100 hover:border-sky-400'
               }`}
             >
               {o.etiqueta}

@@ -11,7 +11,7 @@ const ESTILO: Record<Evidencia, string> = {
 // El nivel va siempre en texto, nunca solo como color.
 export default function InsigniaEvidencia({ evidencia, n }: { evidencia: Evidencia; n: number }) {
   return (
-    <span className={`inline-block rounded-full border px-3 py-0.5 text-sm font-medium ${ESTILO[evidencia]}`}>
+    <span className={`inline-block rounded-full border px-3 py-0.5 text-base font-medium ${ESTILO[evidencia]}`}>
       {NOMBRE_EVIDENCIA[evidencia]} · n = {miles(n)}
     </span>
   )
