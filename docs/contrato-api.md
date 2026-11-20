@@ -89,7 +89,7 @@ Opciones de los selectores, umbrales, definiciones y estado de la tubería.
     "referencia": "Resto de la liga, sin el equipo, en la misma situación."
   },
   "juego_neutral": { "aplicado": true, "cuartos": [1, 2, 3], "diferencia_maxima": 8 },
-  "cobertura": { "temporada": 2021, "semana_min": 1, "semana_max": 8, "partidos": 122, "jugadas": 8522 },
+  "cobertura": { "temporadas": [2021], "semana_min": 1, "semana_max": 8, "partidos": 122, "jugadas": 8522 },
   "revision": {
     "fino": { "descripcion": "rushers × down × distancia", "revisadas": 30, "con_ventaja": 2 },
     "agrupado": { "descripcion": "rushers × down", "revisadas": 65, "con_ventaja": 3 }

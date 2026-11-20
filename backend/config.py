@@ -32,8 +32,10 @@ DISTANCIAS = [
     {"valor": "larga", "etiqueta": "Larga (7 o más)", "corto": "largo", "min": 7, "max": None},
 ]
 GRUPOS_RUSHERS = [
-    {"valor": "4_o_menos", "etiqueta": "4 rushers o menos", "min": 0, "max": UMBRAL_BLITZ - 1},
-    {"valor": "blitz", "etiqueta": f"Blitz ({UMBRAL_BLITZ} o más)", "min": UMBRAL_BLITZ, "max": None},
+    {"valor": "4_o_menos", "etiqueta": "4 rushers o menos", "corto": "4 rushers o menos",
+     "min": 0, "max": UMBRAL_BLITZ - 1},
+    {"valor": "blitz", "etiqueta": f"Blitz ({UMBRAL_BLITZ} o más)", "corto": "blitz",
+     "min": UMBRAL_BLITZ, "max": None},
 ]
 TODAS = "todas"  # distancia en el nivel agrupado
 TODOS = "todos"  # grupo de rushers en la métrica blitz_recibido
