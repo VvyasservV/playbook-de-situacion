@@ -74,7 +74,7 @@ La app usa el nivel A (equipo, down y distancia) para las tarjetas y la consulta
   descansa en 39 jugadas en juego neutral.
 - **Efecto específico del 2.º y largo**: con 4 rushers en general Carolina no se aleja de la liga
   (39.5%, n = 114, contra 32.7%, n = 3,113; los rangos se tocan). Tampoco en 3.º/4.º down (38.2%,
-  n = 34, contra 42.2%) ni en 1.er down (28.6%, n = 28, contra 28.0%).
+  n = 34, contra 42.1%) ni en 1.er down (28.6%, n = 28, contra 28.0%).
 - **Un solo mariscal**: 276 de las 294 jugadas de Carolina son de Sam Darnold (18 de Phillip
   Walker). Las 39 jugadas del hallazgo en juego neutral son de Darnold. Parte de la presión
   puede venir del mariscal (cuánto retiene el balón) y no solo de la línea.
